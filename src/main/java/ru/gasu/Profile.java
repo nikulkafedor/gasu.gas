@@ -1,50 +1,49 @@
 package ru.gasu;
 
+import org.telegram.abilitybots.api.db.DBContext;
+
+import java.util.Map;
+
 public class Profile<S> {
     private int idProfile;
-    private String name;
-    private String lastName;
-    private int age;
-    private Sex sex;
+    private String Name;
+    private String age;
+    private String sex;
     private boolean like;
 
     public Profile() {
         this.idProfile = idProfile;
-        this.name = name;
-        this.lastName = lastName;
+        this.Name = Name;
         this.age = age;
         this.sex =  sex;
         this.like = like;
     }
 
-    public int getIdProfile(Integer idProfile, String name, String lastName, Integer age, boolean like) {
+    public int getIdProfile(Integer idProfile, String name,  Integer age, boolean like) {
         return this.idProfile;
     }
 
-    public String getName() {
-        return name;
+    public String getName(String s) {
+        return Name;
     }
 
     public void setLike(boolean like) {
         this.like = like;
     }
 
-    public Sex getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(Sex sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
 
     public boolean isLike() {
         return like;
     }
-    public String getLastName() {
-        return lastName;
-    }
 
-    public int getAge() {
+    public String getAge(String s) {
         return age;
     }
 
@@ -53,14 +52,40 @@ public class Profile<S> {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.Name = name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
+    }
+    private  Map<Boolean,String> likeMap;
+
+    void Like(DBContext db){
+        likeMap = db.getMap("Like");
+    }
+
+    private Map<Integer, String> profileMap;
+
+    Profile(DBContext db) {
+        profileMap = db.getMap("Profiles");
+    }
+
+    public void add(String s) {
+        profileMap.put(profileMap.size(), s);
+    }
+
+    String[] get() {
+        String[] myArray = new String[profileMap.size()];
+        ;
+        for (int i : profileMap.keySet()) {
+            myArray[i] = (profileMap.get(i));
+        }
+        return myArray;
+    }
+
+    public void remove() {
+        for (int i : profileMap.keySet()) {
+            profileMap.remove(i);
+        }
     }
 }
