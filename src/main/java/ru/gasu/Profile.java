@@ -5,6 +5,8 @@ import org.telegram.abilitybots.api.db.DBContext;
 import java.util.Map;
 
 public class Profile<S> {
+  //  public String getName;
+    //public String getAge;
     private int idProfile;
     private String Name;
     private String age;

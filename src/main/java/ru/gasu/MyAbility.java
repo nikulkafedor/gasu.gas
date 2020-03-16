@@ -1,15 +1,16 @@
 package ru.gasu;
 
 import org.telegram.abilitybots.api.db.DBContext;
-import org.telegram.abilitybots.api.objects.Ability;
-import org.telegram.abilitybots.api.objects.Locality;
-import org.telegram.abilitybots.api.objects.Privacy;
-import org.telegram.abilitybots.api.objects.Reply;
+import org.telegram.abilitybots.api.objects.*;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import static javax.swing.UIManager.get;
 
 public class MyAbility implements AbilityExtension {
     private SilentSender silent;
@@ -74,15 +75,60 @@ public Ability join(){
     public Reply mutualLove() {
         return Reply.of(update -> {
             Map<Integer, String[]> profileMap;
-            profileMap = db.getMap("Profiles");
-            Integer q = 0;
-            String[] myNewArray = new String[profileMap.size()];
-            for (int i : profileMap.keySet()) {
-                myNewArray[i] = profileMap.get(i)[0];
-            }
-                silent.send(Arrays.toString(myNewArray), update.getMessage().getChatId());
-        },  update -> update.getMessage().getText().equals("/stop"));
+            profileMap = db.getMap("newProfile");
+            int[][] twoDimArray = new int[2][profileMap.size()];
+
+//            for (int i = 0; i < twoDimArray.length; i++) {
+//                System.out.println(twoDimArray[i]);
+//            }
+
+            Random rnd = new Random();
+            String[] profile = profileMap.get(rnd.nextInt(profileMap.size()));
+
+            silent.send(String.valueOf(profile), update.getMessage().getChatId());
+        }, update -> update.getMessage().getText().equals("/liked"));
     }
+
+//
+//    public Ability liked() {
+//        return Ability
+//                .builder()
+//                .name("liked")
+//                .locality(Locality.ALL)
+//                .privacy(Privacy.PUBLIC)
+//                .input(0)
+//                .action(ctx -> {
+//                    silent.send("Вам нравится этот человек? Ответ в формате: /add2 1/0 (да/нет)\"/add2 liked\" ", ctx.chatId());
+//                })
+//                .build();
+//    }
+//
+//
+//    public Ability liked2(){
+//        return  Ability
+//                .builder()
+//                .name("liked2")
+//                .locality(Locality.ALL)
+//                .privacy(Privacy.PUBLIC)
+//                .input(3)
+//                .action(ctx -> {
+//                    Map<Integer, String[]> profileMap;
+//                    profileMap = db.getMap("newProfile");
+//                    int[][] twoDimArray = new int[2][profileMap.size()];
+//                    Liked liked = new Liked();
+//                    String answer;
+//                    liked.setLiked(ctx.firstArg());
+//                    if (liked.setLiked(ctx.firstArg()) == "1"){
+//                        twoDimArray[1][profileMap.size()] = 1;
+//                    } else {
+//                        twoDimArray[0][profileMap.size()] = 1;
+//                    }
+////                    profileDB.put(profileDB.size(),liked());
+//                    silent.send("Hi" + liked,ctx.chatId());
+//                })
+//                .build();
+//    }
+
 
     public Ability stop() {
         return Ability
